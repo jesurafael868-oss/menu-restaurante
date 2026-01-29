@@ -3,121 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menú Digital</title>
-
+    <title>Menú Móvil Pantalla Completa</title>
     <style>
+        /* Reset total para celular */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        /* Evita rebotes y scrolls raros en móviles */
-        html, body {
-            width: 100%;
-            height: 100%;
-            height: -webkit-fill-available;
-            overflow: hidden;
-            background: #000;
-            font-family: sans-serif;
-        }
-
-        #visor {
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        #menuImg {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain; /* La imagen se ajusta sin cortarse */
-            transition: opacity 0.3s ease;
-        }
-
-        .fade { opacity: 0; }
-
-        /* Botones laterales circulares */
-        .btn-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 60px;
-            height: 60px;
-            background: rgba(245, 194, 122, 0.9); /* Color dorado */
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            z-index: 100;
-            cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
 
-        .btn-nav svg {
-            width: 30px;
-            height: 30px;
-            fill: #000;
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden; /* Evita que la pantalla se mueva */
+            font-family: sans-serif;
         }
 
-        .izq { left: 15px; }
-        .der { right: 15px; }
+        /* Contenedor principal que se adapta al alto del celular */
+        #visor {
+            width: 100vw;
+            height: 100dvh; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: none; /* Necesario para que el deslizamiento funcione fluido */
+        }
 
-        /* Efecto al tocar */
-        .btn-nav:active {
-            transform: translateY(-50%) scale(0.9);
-            background: #e39a3b;
+        /* La imagen ocupará TODO el celular */
+        #menuImg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* LLENA TODA LA PANTALLA */
+            transition: opacity 0.3s ease, transform 0.4s ease;
+        }
+
+        .fade-efecto {
+            opacity: 0;
+            transform: scale(1.1);
+        }
+
+        /* Botones laterales elegantes */
+        .flecha-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(245, 194, 122, 0.85); /* Dorado */
+            color: #000;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 20;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .btn-izq { left: 15px; }
+        .btn-der { right: 15px; }
+
+        .oculto { display: none; }
+
+        /* Texto de ayuda inferior */
+        .hint {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 13px;
+            text-shadow: 1px 1px 5px #000;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
 <div id="visor">
-    <button id="btnAtras" class="btn-nav izq" onclick="atras()" style="display: none;">
-        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-    </button>
-
-    <img id="menuImg" src="menu1.png" alt="Menú página 1">
-
-    <button id="btnSiguiente" class="btn-nav der" onclick="siguiente()">
-        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </button>
+    <button id="atras" class="flecha-nav btn-izq oculto" onclick="irPagina(1)">❮</button>
+    
+    <img id="menuImg" src="menu1.png" alt="Página 1">
+    
+    <button id="sig" class="flecha-nav btn-der" onclick="irPagina(2)">❯</button>
+    
+    <div class="hint" id="hintText">Desliza para cambiar de página</div>
 </div>
 
 <script>
     const img = document.getElementById("menuImg");
-    const btnAtras = document.getElementById("btnAtras");
-    const btnSiguiente = document.getElementById("btnSiguiente");
+    const btnAtras = document.getElementById("atras");
+    const btnSig = document.getElementById("sig");
+    const hint = document.getElementById("hintText");
 
-    // Pre-carga de la segunda imagen para que no parpadee en blanco
-    const tempImg = new Image();
-    tempImg.src = "menu2.png";
+    let touchStartX = 0;
 
-    function cambiarImagen(src) {
-        img.classList.add("fade");
+    function irPagina(num) {
+        img.classList.add("fade-efecto");
+        
         setTimeout(() => {
-            img.src = src;
-            img.classList.remove("fade");
-        }, 200);
+            if(num === 2) {
+                img.src = "menu2.png";
+                btnSig.classList.add("oculto");
+                btnAtras.classList.remove("oculto");
+                hint.innerText = "Desliza para volver";
+            } else {
+                img.src = "menu1.png";
+                btnSig.classList.remove("oculto");
+                btnAtras.classList.add("oculto");
+                hint.innerText = "Desliza para cambiar de página";
+            }
+            img.classList.remove("fade-efecto");
+        }, 300);
     }
 
-    function siguiente() {
-        cambiarImagen("menu2.png");
-        btnSiguiente.style.display = "none";
-        btnAtras.style.display = "flex";
-    }
+    // Lógica de deslizar con el dedo (Swipe)
+    const visor = document.getElementById('visor');
 
-    function atras() {
-        cambiarImagen("menu1.png");
-        btnSiguiente.style.display = "flex";
-        btnAtras.style.display = "none";
-    }
+    visor.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    visor.addEventListener('touchend', e => {
+        let touchEndX = e.changedTouches[0].screenX;
+        let diff = touchStartX - touchEndX;
+
+        // Si desliza a la izquierda (valor positivo)
+        if (diff > 50) irPagina(2); 
+        // Si desliza a la derecha (valor negativo)
+        if (diff < -50) irPagina(1);
+    }, false);
 </script>
 
 </body>
