@@ -2,120 +2,109 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Menú del Restaurante</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet">
 
 <style>
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
-    background: #000;
-    font-family: 'Poppins', sans-serif;
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
 }
 
-/* Contenedor principal */
-.contenedor {
+/* Contenedor pantalla completa */
+#visor {
     width: 100vw;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Título */
-.titulo {
-    text-align: center;
-    color: #f5c27a;
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    padding: 10px;
-    background: #111;
-}
-
-/* Área del menú */
-.menu-area {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #000;
     position: relative;
 }
 
-/* Imagen grande */
-.menu-area img {
+/* Imagen menú FULL */
+#menuImg {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    transition: all 0.4s ease;
+    object-fit: contain; /* cambia a cover si quieres que llene recortando */
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.menu-area img.fade {
+.fade {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.97);
 }
 
 /* Botones */
 .botones {
     position: absolute;
-    bottom: 15px;
-    right: 50%;
-    transform: translateX(50%);
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 12px 26px;
     border: none;
-    border-radius: 25px;
+    border-radius: 30px;
     background: linear-gradient(135deg, #f5c27a, #e39a3b);
     font-weight: bold;
-    margin: 0 8px;
-    font-size: 14px;
+    font-size: 16px;
+    margin: 0 10px;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(245, 194, 122, 0.7);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(245, 194, 122, 1);
+}
+
+button:active {
+    transform: scale(0.95);
 }
 </style>
 </head>
 <body>
 
-<div class="contenedor">
+<div id="visor">
+    <img id="menuImg" src="menu1.png" alt="Menú">
 
-    <div class="titulo">Menú del Restaurante</div>
-
-    <div class="menu-area">
-        <img id="menuImg" src="menu1.png">
-
-        <div class="botones">
-            <button id="btnAtras" onclick="atras()" style="display:none;">⬅ Atrás</button>
-            <button id="btnSiguiente" onclick="siguiente()">Siguiente ➜</button>
-        </div>
+    <div class="botones">
+        <button id="btnAtras" onclick="atras()" style="display:none;">⬅ Atrás</button>
+        <button id="btnSiguiente" onclick="siguiente()">Siguiente ➜</button>
     </div>
-
 </div>
 
 <script>
 const img = document.getElementById("menuImg");
+const btnAtras = document.getElementById("btnAtras");
+const btnSiguiente = document.getElementById("btnSiguiente");
 
-function cambiarImagen(nueva) {
+function cambiarImagen(src) {
     img.classList.add("fade");
     setTimeout(() => {
-        img.src = nueva;
+        img.src = src;
         img.classList.remove("fade");
     }, 200);
 }
 
 function siguiente() {
     cambiarImagen("menu2.png");
-    document.getElementById("btnSiguiente").style.display = "none";
-    document.getElementById("btnAtras").style.display = "inline-block";
+    btnSiguiente.style.display = "none";
+    btnAtras.style.display = "inline-block";
 }
 
 function atras() {
     cambiarImagen("menu1.png");
-    document.getElementById("btnSiguiente").style.display = "inline-block";
-    document.getElementById("btnAtras").style.display = "none";
+    btnSiguiente.style.display = "inline-block";
+    btnAtras.style.display = "none";
 }
 </script>
 
