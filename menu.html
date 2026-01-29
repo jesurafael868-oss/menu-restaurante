@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Menú del Restaurante</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #1b1b1b, #3a1c1c);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.contenedor {
+    background: #111;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+}
+
+.titulo {
+    color: #f5c27a;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.imagen-contenedor {
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+img {
+    width: 100%;
+    max-height: 65vh;
+    object-fit: contain;
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.5s ease;
+}
+
+img.fade {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.botones {
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 22px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #f5c27a, #e39a3b);
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 10px rgba(255,200,100,0.8);
+}
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+    <div class="titulo">Menú del Restaurante</div>
+
+    <div class="imagen-contenedor">
+        <img id="menuImg" src="menu1.png">
+    </div>
+
+    <div class="botones">
+        <button id="btnAtras" onclick="atras()" style="display:none;">⬅ Atrás</button>
+        <button id="btnSiguiente" onclick="siguiente()">Siguiente ➜</button>
+    </div>
+</div>
+
+<script>
+let pagina = 1;
+const img = document.getElementById("menuImg");
+
+function cambiarImagen(nueva) {
+    img.classList.add("fade");
+
+    setTimeout(() => {
+        img.src = nueva;
+        img.classList.remove("fade");
+    }, 300);
+}
+
+function siguiente() {
+    pagina = 2;
+    cambiarImagen("menu2.png");
+
+    document.getElementById("btnSiguiente").style.display = "none";
+    document.getElementById("btnAtras").style.display = "inline-block";
+}
+
+function atras() {
+    pagina = 1;
+    cambiarImagen("menu1.png");
+
+    document.getElementById("btnSiguiente").style.display = "inline-block";
+    document.getElementById("btnAtras").style.display = "none";
+}
+</script>
+
+</body>
+</html>
